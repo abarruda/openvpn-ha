@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openvpn-deployment
+  labels:
+    app: openvpn
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: openvpn
+
+  template:
+    metadata:
+      labels:
+        app: openvpn
+    spec:
+
+      volumes:
+      - name: openvpn-data
+        flexVolume:
+          driver: "fstab/cifs"
+          fsType: "cifs"
+          secretRef:
+            name: "network-storage-cifs-secret"
+          options:
+            networkPath: "//<server>/storage/openvpn"
+            mountOptions: "vers=1.0,auto,x-systemd.automount,dir_mode=0755,file_mode=0644,noperm"
+
+      containers:
+      - name: openvpn
+        image: giggio/openvpn-arm
+        imagePullPolicy: IfNotPresent
+
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+
+        ports:
+          - containerPort: 1194
+            name: vpn-udp
+            protocol: UDP
+
+        volumeMounts:
+          - name: openvpn-data
+            mountPath: /etc/openvpn
+
+  restartPolicy: Always
