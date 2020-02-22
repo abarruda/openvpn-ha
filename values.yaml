@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: giggio/openvpn-arm
+  pullPolicy: IfNotPresent
+
+ports:
+  vpn:
+    name: vpn-udp
+    number: 1194
+    protocol: UDP
+
+volumes:
+  data: 
+    name: openvpn-data
+    mountPath: /etc/openvpn
+
+service:
+  externalTrafficPolicy: Local
+  ip: 
+
+affinity:
+  weight: 100
+  label: 
+  value:

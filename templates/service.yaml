@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}-service
+  annotations:
+  labels:
+    app: {{ .Chart.Name }}
+
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  type: LoadBalancer
+  loadBalancerIP: {{ .Values.service.ip }}
+
+  ports:
+  - name: {{ .Values.ports.vpn.name }}
+    port: {{ .Values.ports.vpn.number }}
+    protocol: {{ .Values.ports.vpn.protocol }}
+    targetPort: {{ .Values.ports.vpn.name }}
