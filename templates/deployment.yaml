@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-deployment
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+
+    spec:
+
+      volumes:
+      - name: {{ .Values.volumes.data.name }}
+        persistentVolumeClaim:
+          claimName: {{ .Chart.Name }}-pvclaim
+
+      containers:
+        - name: {{ .Chart.Name }}-deployment
+          image: "{{ .Values.image.digest }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+
+          ports:
+            - name: {{ .Values.ports.vpn.name }}
+              containerPort: {{ .Values.ports.vpn.number }}
+              protocol: {{ .Values.ports.vpn.protocol }}
+
+          volumeMounts:
+            - name: {{ .Values.volumes.data.name }}
+              mountPath: {{ .Values.volumes.data.mountPath }}
+
+      {{- if .Values.affinity.value }}
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: {{ .Values.affinity.weight }}
+              preference:
+                matchExpressions:
+                  - key: "{{ .Values.affinity.label }}"
+                    operator: In
+                    values: 
+                      {{- range .Values.affinity.value }}
+                      - {{ . | quote }}
+                      {{- end }}
+      {{- end }}
