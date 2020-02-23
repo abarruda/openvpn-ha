@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: giggio/openvpn-arm
+  digest: giggio/openvpn-arm@sha256:fb29f196594b95ed94b814ae400ae9568221e026a351edb712008ab62b2a2663
   pullPolicy: IfNotPresent
 
 ports:
@@ -14,6 +14,7 @@ volumes:
   data: 
     name: openvpn-data
     mountPath: /etc/openvpn
+    size: 10Mi
 
 service:
   externalTrafficPolicy: Local

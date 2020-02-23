@@ -29,19 +29,19 @@ spec:
           image: "{{ .Values.image.digest }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-        securityContext:
-          capabilities:
-            add:
-              - NET_ADMIN
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
 
-        ports:
-          - name: {{ .Values.ports.vpn.name }}
-            containerPort: {{ .Values.ports.vpn.number }}
-            protocol: {{ .Values.ports.vpn.protocol }}
+          ports:
+            - name: {{ .Values.ports.vpn.name }}
+              containerPort: {{ .Values.ports.vpn.number }}
+              protocol: {{ .Values.ports.vpn.protocol }}
 
-        volumeMounts:
-          - name: {{ .Values.volumes.data.name }}
-            mountPath: {{ .Values.volumes.data.mountPath }}
+          volumeMounts:
+            - name: {{ .Values.volumes.data.name }}
+              mountPath: {{ .Values.volumes.data.mountPath }}
 
       {{- if .Values.affinity.value }}
       affinity:

@@ -8,4 +8,4 @@ spec:
   volumeMode: Filesystem
   resources:
     requests:
-      storage: 10Mi
+      storage: {{ .Values.volumes.data.size}}
