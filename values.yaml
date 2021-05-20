@@ -15,6 +15,8 @@ volumes:
     name: openvpn-data
     mountPath: /etc/openvpn
     size: 10Mi
+    server: 
+    path:
 
 service:
   externalTrafficPolicy: Local

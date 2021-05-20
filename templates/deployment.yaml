@@ -22,7 +22,7 @@ spec:
       volumes:
       - name: {{ .Values.volumes.data.name }}
         persistentVolumeClaim:
-          claimName: {{ .Chart.Name }}-pvclaim
+          claimName: {{ .Chart.Name }}-pv-claim
 
       containers:
         - name: {{ .Chart.Name }}-deployment
