@@ -1,0 +1,17 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Chart.Name }}-pv
+  labels:
+spec:
+  storageClassName: manual
+  claimRef:
+    namespace: default
+    name: {{ .Chart.Name }}-pv-claim
+  capacity:
+    storage: {{ .Values.volumes.data.size }}
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    path: {{ .Values.volumes.data.path }}
+    server: {{ .Values.volumes.data.server }}
